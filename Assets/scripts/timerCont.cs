@@ -24,6 +24,9 @@ public class timerCont : MonoBehaviour
     public Image Circle3;
     public Image Circle4;
     public Image Circle5;
+    public AudioSource MultSound;
+    public AudioSource CountDownSound;
+
     public static int Score/*=21500*/;//skorboard ve topScorers ekranlarýnýn kontrolü için;
 
 
@@ -36,11 +39,13 @@ public class timerCont : MonoBehaviour
     int result1;
     int result2;
     bool wrongAns;
+    bool countDownBool = false;
     void Start()
     {
-    StartCoroutine(countDown());
+        StartCoroutine(countDown());
         MultText.text = "x1";
     }
+   
     public IEnumerator TimerStart()
     {
         StartCoroutine(NumberGenerator());
@@ -56,6 +61,11 @@ public class timerCont : MonoBehaviour
             Header.text = "Determine which side is larger";
             yield return new WaitForSeconds(1f);
             TimerTime--;
+            if (!countDownBool && TimerTime <= 5)
+            {
+                CountDownSound.Play();
+                countDownBool = true;
+            }
         }
         TimerDisplay.gameObject.SetActive(false);
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
@@ -261,8 +271,8 @@ public class timerCont : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
             
             choice = 0;
-
-
+            
+            
 
         }
         
@@ -370,6 +380,7 @@ public class timerCont : MonoBehaviour
         {
             mult += 1;
             MultText.text = "x" + mult;
+            MultSound.Play();
         }
         StartCoroutine(MultHandler());
         StartCoroutine(crossHandler());
