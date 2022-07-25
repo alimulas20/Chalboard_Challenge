@@ -45,7 +45,22 @@ public class timerCont : MonoBehaviour
         StartCoroutine(countDown());
         MultText.text = "x1";
     }
-   
+    private void Update()
+    {
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            selector1();
+        }
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            selector2();
+        }
+        if (Input.GetKey(KeyCode.DownArrow))
+        {
+            selector3();
+        }
+
+    }
     public IEnumerator TimerStart()
     {
         StartCoroutine(NumberGenerator());
