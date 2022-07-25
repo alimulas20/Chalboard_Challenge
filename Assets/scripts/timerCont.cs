@@ -24,7 +24,9 @@ public class timerCont : MonoBehaviour
     public Image Circle3;
     public Image Circle4;
     public Image Circle5;
-    public static int Score;
+    public static int Score/*=21500*/;//skorboard ve topScorers ekranlarýnýn kontrolü için;
+
+
     public static int mult=1; //for storing lvl
     public static int QuesCount;
     public static int wrongCount;
