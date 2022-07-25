@@ -514,7 +514,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   CountdownTime: 3
-  TimerTime: 10
+  TimerTime: 50
   CountDisplay: {fileID: 999634774}
   TimerDisplay: {fileID: 1632330045}
   TimeAdder: {fileID: 666219138}
