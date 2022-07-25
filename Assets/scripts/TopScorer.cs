@@ -22,7 +22,7 @@ public class TopScorer : MonoBehaviour
         PlayerPrefs.SetString("5", "20400,25/07/2022");*/
         string[] SystemDate = System.DateTime.Now.ToString().Split(' ');
         string date = SystemDate[0].Replace('.', '/');
-        int LPIMultiplier = 0 ;
+   
         string[] pointscore;
         bool shift = false;
         for(int i = 0; i < 5; i++)
@@ -33,7 +33,8 @@ public class TopScorer : MonoBehaviour
                 shift = true;
                 Points[i].text = timerCont.Score.ToString();
                 Dates[i].text = date;
-                LPIMultiplier = i + 1;
+                
+                LPIText.text = (1290/(i+1) + 1500).ToString();
             }
             if (shift&&i<5)
             {
@@ -50,7 +51,7 @@ public class TopScorer : MonoBehaviour
         shift=false;
 
 
-        LPIText.text = (LPIMultiplier * 129 + 1500).ToString();
+        
     }
 
     public void next()
