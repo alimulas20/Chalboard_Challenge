@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 
 public class timerCont : MonoBehaviour
@@ -10,6 +11,7 @@ public class timerCont : MonoBehaviour
     public int TimerTime;
     public Text CountDisplay;
     public Text TimerDisplay;
+    public Text TimeAdder;
     public Text ScoreText;
     public Text Header;
     public Text MultText;
@@ -22,14 +24,16 @@ public class timerCont : MonoBehaviour
     public Image Circle3;
     public Image Circle4;
     public Image Circle5;
-    int Score;
-    int mult=1; //for storing lvl
+    public static int Score;
+    public static int mult=1; //for storing lvl
+    public static int QuesCount;
+    public static int wrongCount;
     int multCount=0;//for storing where in lvl
     int choice = 0;
     bool choiceBool = true;
     int result1;
     int result2;
-
+    bool wrongAns;
     void Start()
     {
     StartCoroutine(countDown());
@@ -40,13 +44,19 @@ public class timerCont : MonoBehaviour
         StartCoroutine(NumberGenerator());
         while (TimerTime > 0)
         {
-            TimerDisplay.text = TimerTime.ToString();
+            
+            if(TimerTime%60>9)
+                TimerDisplay.text = TimerTime / 60 + ":" + TimerTime % 60;
+            else
+            {
+                TimerDisplay.text = TimerTime / 60 + ":0" + TimerTime % 60;
+            }
             Header.text = "Determine which side is larger";
             yield return new WaitForSeconds(1f);
             TimerTime--;
         }
         TimerDisplay.gameObject.SetActive(false);
-    
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     public IEnumerator countDown()
@@ -68,9 +78,9 @@ public class timerCont : MonoBehaviour
             result2 = Random.Range(1, 30);
             Op2.text = result2.ToString();
             yield return new WaitWhile(()=>(choice==0||!choiceBool));
-            yield return new WaitForSeconds(1f);
-            Check.gameObject.SetActive(false);
-            Cross.gameObject.SetActive(false);
+            if (wrongAns)
+                yield return new WaitForSeconds(0.5f);
+
             choice = 0;
         }
         while(mult == 2||mult==3||mult==4)
@@ -137,9 +147,9 @@ public class timerCont : MonoBehaviour
                 Op2.text = operationBasicText(number2, number4, operation2);
             }
             yield return new WaitWhile(() => (choice == 0 || !choiceBool));
-            yield return new WaitForSeconds(1f);
-            Check.gameObject.SetActive(false);
-            Cross.gameObject.SetActive(false);
+            if (wrongAns)
+                yield return new WaitForSeconds(0.5f);
+
             choice = 0;
         }
         while (mult>=5)
@@ -169,6 +179,50 @@ public class timerCont : MonoBehaviour
                 sideSelect = Random.Range(1, 4);//iki tarafta da parantezli iþlem olma olasýlýðý eklendi.
             else
                 sideSelect = 3;
+
+           
+            if (operation1 == 3)
+            {
+                if (number1 > number3)
+                    number1 += number3-(number1 % number3);
+                else
+                    number1 = number3;
+            }//çýkarma sonucunun pozitif olmasýný saðlýyor
+            else if (operation1 == 2 && number1 < number3)
+            {
+                number1 = number1 + number3;
+            }
+            if (operation2 == 3)
+            {
+                if (number2 > number4)
+                    number2 += number4 - (number2 % number4);
+                else
+                    number1 = number3;
+            }//çýkarma sonucunun pozitif olmasýný saðlýyor
+            else if (operation2 == 2 && number2 < number4)
+            {
+                number2 = number2 + number4;
+            }
+            if (operation3 == 3)//parantezin dýþýndaki iþlem bölme olduðunda parantez içi toplama oluyor
+            {//tam bölünmeyi saðlamak için ikinci sayýya tam bölünme için gereken sayý ekleniyor 
+                operation1 = 0;
+                number3 += number5 - ((number1 + number3) % number5);
+            }
+            if (operation4 == 3)
+            {
+                operation2 = 0;
+                number4 += number6 - ((number2 + number4) % number6);
+            }
+            if (operation3 == 2)//parantezli iþlem sonrasýnda çýkarmanýn negatif olma ihtimali düzenleniyor
+            {
+                if(number5> operationBasic(number1, number3, operation1))
+                number5 = operationBasic(number1, number3, operation1);
+            }
+            if (operation4 == 2)
+            {
+                if(number6> operationBasic(number2, number4, operation2))
+                number6 = operationBasic(number2, number4, operation2);
+            }
             if (sideSelect == 0)
             {
                 result1 = operationBasic(number1, number3, operation1);
@@ -201,9 +255,9 @@ public class timerCont : MonoBehaviour
             }
 
             yield return new WaitWhile(() => (choice == 0 || !choiceBool));
-            yield return new WaitForSeconds(1f);
-            Check.gameObject.SetActive(false);
-            Cross.gameObject.SetActive(false);
+            if(wrongAns)
+            yield return new WaitForSeconds(0.5f);
+            
             choice = 0;
 
 
@@ -237,7 +291,7 @@ public class timerCont : MonoBehaviour
         }
         else if (operation == 1)
         {
-            return number + " * " + number2;
+            return number + " x " + number2;
         }
         else if (operation == 2)
         {
@@ -245,7 +299,7 @@ public class timerCont : MonoBehaviour
         }
         else
         {
-            return number + " / " + number2;
+            return number + " ÷ " + number2;
         }
     }
     int operationComplex(int number,int number2,int number3,int operation1,int operation2)
@@ -261,6 +315,7 @@ public class timerCont : MonoBehaviour
     }
     void comparator()
     {
+        QuesCount++;
         if (choice == 1)
         {
             if (result1 > result2)
@@ -273,10 +328,8 @@ public class timerCont : MonoBehaviour
             }
             else
             {
-                Cross.gameObject.SetActive(true);
-                choiceBool = true;
-                if (multCount != 0)
-                    multCount--;
+               WrongAnswer();
+                
             }
 
         }
@@ -292,10 +345,7 @@ public class timerCont : MonoBehaviour
             }
             else
             {
-                Cross.gameObject.SetActive(true);
-                choiceBool = true;
-                if (multCount != 0)
-                    multCount--;
+            WrongAnswer();
             }
         }
         else
@@ -311,10 +361,7 @@ public class timerCont : MonoBehaviour
             }
             else
             {
-                Cross.gameObject.SetActive(true);
-                choiceBool = true;
-                if(multCount!=0)
-                    multCount--;
+                WrongAnswer();
             }
         }
         if (multCount == 5)
@@ -323,6 +370,31 @@ public class timerCont : MonoBehaviour
             MultText.text = "x" + mult;
         }
         StartCoroutine(MultHandler());
+        StartCoroutine(crossHandler());
+    }
+    void WrongAnswer()
+    {
+        wrongCount++;
+        Cross.gameObject.SetActive(true);
+        TimerTime -= 3;
+        TimeAdder.text = "-3 seconds";
+        Op1.text = result1.ToString();
+        Op2.text = result2.ToString();
+        Op1.color = Color.yellow;
+        Op2.color = Color.yellow;
+        choiceBool = true;
+        wrongAns = true;
+        
+        if (multCount != 0)
+            multCount--;
+    }
+    public IEnumerator crossHandler()
+    {
+        yield return new WaitForSeconds(0.5f);
+        Check.gameObject.SetActive(false);
+        Cross.gameObject.SetActive(false);
+        Op1.color = new Color32(27,68,212,255);
+        Op2.color = new Color32(27, 68, 212, 255);
     }
     public IEnumerator MultHandler()
     {
@@ -366,7 +438,10 @@ public class timerCont : MonoBehaviour
             Circle3.color = new Color32(2, 58, 26, 255);
             Circle4.color = new Color32(2, 58, 26, 255);
             Circle5.color = new Color32(2, 58, 26, 255);
+            TimerTime+=10;
+            TimeAdder.text = "+10 seconds";
             yield return new WaitForSeconds(1f);
+            TimeAdder.text = "";
             multCount = 0;
             StartCoroutine(MultHandler());
         }
