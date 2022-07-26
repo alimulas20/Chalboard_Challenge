@@ -44,6 +44,7 @@ public class timerCont : MonoBehaviour
     {
         StartCoroutine(countDown());
         MultText.text = "x1";
+        mult = 1;
     }
     private void Update()
     {
