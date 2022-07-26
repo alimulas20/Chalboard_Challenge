@@ -106,7 +106,10 @@ public class timerCont : MonoBehaviour
             Op2.text = result2.ToString();
             yield return new WaitWhile(()=>(choice==0||!choiceBool));
             if (wrongAns)
+            {
                 yield return new WaitForSeconds(0.5f);
+                TimeAdder.text = "";
+            }
 
             choice = 0;
         }
@@ -116,8 +119,8 @@ public class timerCont : MonoBehaviour
             int number2 = Random.Range(1, 31);
             int number3 = Random.Range(1, 10);
             int number4 = Random.Range(1, 10);
-            int operation = Random.Range(0, 3);
-            int operation2 = Random.Range(0, 3);
+            int operation = Random.Range(0, 4);
+            int operation2 = Random.Range(0, 4);
             int sideSelect;
             if(mult == 2)
                 sideSelect = Random.Range(0, 2);
@@ -157,10 +160,21 @@ public class timerCont : MonoBehaviour
             }
             else
             {
+                if (operation == 3)
+                {
+                    if (number1 > number3)
+                        number1 += number3 - (number1 % number3);
+                    else
+                        number1 = number3;
+                }
+                else if (operation == 2 && number1 < number3)
+                {
+                    number1 = number1 + number3;
+                }
                 if (operation2 == 3)
                 {
                     if (number2 > number4)
-                        number2 -= number2 % number4;
+                        number2 += number4-(number2 % number4);
                     else
                         number2 = number4;
                 }else if (operation2 == 2&&number2<number4)
@@ -175,7 +189,10 @@ public class timerCont : MonoBehaviour
             }
             yield return new WaitWhile(() => (choice == 0 || !choiceBool));
             if (wrongAns)
+            {
                 yield return new WaitForSeconds(0.5f);
+                TimeAdder.text = "";
+            }
 
             choice = 0;
         }
@@ -187,10 +204,10 @@ public class timerCont : MonoBehaviour
             int number4 = Random.Range(1, 10);
             int number5 = Random.Range(1, 10);
             int number6 = Random.Range(1, 10);
-            int operation1 = Random.Range(0, 3);
-            int operation2 = Random.Range(0, 3);
-            int operation3 = Random.Range(0, 3);
-            int operation4 = Random.Range(0, 3);
+            int operation1 = Random.Range(0, 4);
+            int operation2 = Random.Range(0, 4);
+            int operation3 = Random.Range(0, 4);
+            int operation4 = Random.Range(0, 4);
             int sideSelect;
             //5-6lvl bir taraf parantezli iþlem olabilir üç ihtimal var parantezli iþlem saðda , parantezli iþlem solda
             //parantezli iþlem yok
@@ -282,8 +299,11 @@ public class timerCont : MonoBehaviour
             }
 
             yield return new WaitWhile(() => (choice == 0 || !choiceBool));
-            if(wrongAns)
-            yield return new WaitForSeconds(0.5f);
+            if (wrongAns) {
+                yield return new WaitForSeconds(0.5f);
+                TimeAdder.text = "";
+            }
+            
             
             choice = 0;
             

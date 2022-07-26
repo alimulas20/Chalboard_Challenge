@@ -15,11 +15,11 @@ public class TopScorer : MonoBehaviour
     void Start()
     {
         Score.text = timerCont.Score.ToString();
-        /*PlayerPrefs.SetString("1", "21800,23/07/2022");
+        PlayerPrefs.SetString("1", "21800,23/07/2022");
         PlayerPrefs.SetString("2", "21600,21/07/2022");
         PlayerPrefs.SetString("3", "21400,22/07/2022");
         PlayerPrefs.SetString("4", "20600,20/07/2022");
-        PlayerPrefs.SetString("5", "20400,25/07/2022");*/
+        PlayerPrefs.SetString("5", "20400,25/07/2022");
         string[] SystemDate = System.DateTime.Now.ToString().Split(' ');
         string date = SystemDate[0].Replace('.', '/');
    
@@ -28,7 +28,7 @@ public class TopScorer : MonoBehaviour
         for(int i = 0; i < 5; i++)
         {
             pointscore = PlayerPrefs.GetString((i + 1).ToString()).Split(',');
-            if (!shift&&String.Compare(timerCont.Score.ToString(), pointscore[0]) > 0)
+            if (!shift&&timerCont.Score> System.Convert.ToInt32(pointscore[0]))
             {
                 shift = true;
                 Points[i].text = timerCont.Score.ToString();
@@ -48,6 +48,8 @@ public class TopScorer : MonoBehaviour
             }
             
         }
+        if (!shift)
+            LPIText.text = "1500";
         shift=false;
 
 
