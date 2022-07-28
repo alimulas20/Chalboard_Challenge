@@ -15,11 +15,15 @@ public class TopScorer : MonoBehaviour
     void Start()
     {
         Score.text = timerCont.Score.ToString();
-        /*PlayerPrefs.SetString("1", "21800,23/07/2022");
-        PlayerPrefs.SetString("2", "21600,21/07/2022");
-        PlayerPrefs.SetString("3", "21400,22/07/2022");
-        PlayerPrefs.SetString("4", "20600,20/07/2022");
-        PlayerPrefs.SetString("5", "20400,25/07/2022");*/
+        if (PlayerPrefs.GetString("6") != "1") {
+            PlayerPrefs.SetString("1", "21800,23/07/2022");
+            PlayerPrefs.SetString("2", "21600,21/07/2022");
+            PlayerPrefs.SetString("3", "21400,22/07/2022");
+            PlayerPrefs.SetString("4", "20600,20/07/2022");
+            PlayerPrefs.SetString("5", "20400,25/07/2022");
+            PlayerPrefs.SetString("6", "1");
+        }
+        
         string[] SystemDate = System.DateTime.Now.ToString().Split(' ');
         string date = SystemDate[0].Replace('.', '/');
    
