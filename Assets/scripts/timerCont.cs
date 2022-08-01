@@ -27,7 +27,7 @@ public class timerCont : MonoBehaviour
     public AudioSource MultSound;
     public AudioSource CountDownSound;
 
-    public static int Score/*=21500*/;//skorboard ve topScorers ekranlarının kontrolü için;
+    public static int Score/*=11500*/;//skorboard ve topScorers ekranlarının kontrolü için;
 
 
     public static int mult=1; //for storing lvl
@@ -38,13 +38,20 @@ public class timerCont : MonoBehaviour
     bool choiceBool = true;
     int result1;
     int result2;
-    bool wrongAns;
+    bool wrongAns=false;
     bool countDownBool = false;
     void Start()
     {
+        Score = 0;
+        QuesCount = 0;
+        wrongCount = 0;
         StartCoroutine(countDown());
         MultText.text = "x1";
         mult = 1;
+        multCount = 0;
+        wrongAns = false;
+        countDownBool = false;
+        choiceBool = true;
     }
     private void Update()
     {
@@ -110,6 +117,7 @@ public class timerCont : MonoBehaviour
             {
                 yield return new WaitForSeconds(0.5f);
                 TimeAdder.text = "";
+                wrongAns = false;
             }
 
             choice = 0;
@@ -193,6 +201,7 @@ public class timerCont : MonoBehaviour
             {
                 yield return new WaitForSeconds(0.5f);
                 TimeAdder.text = "";
+                wrongAns = false;
             }
 
             choice = 0;
@@ -242,7 +251,7 @@ public class timerCont : MonoBehaviour
                 if (number2 > number4)
                     number2 += number4 - (number2 % number4);
                 else
-                    number1 = number3;
+                    number2 = number4;
             }//çıkarma sonucunun pozitif olmasını sağlıyor
             else if (operation2 == 2 && number2 < number4)
             {
@@ -303,16 +312,11 @@ public class timerCont : MonoBehaviour
             if (wrongAns) {
                 yield return new WaitForSeconds(0.5f);
                 TimeAdder.text = "";
+                wrongAns = false;
             }
-            
-            
+         
             choice = 0;
-            
-            
-
         }
-        
-
     }
     int operationBasic(int number,int number2,int operation)
     {
@@ -377,9 +381,7 @@ public class timerCont : MonoBehaviour
             else
             {
                WrongAnswer();
-                
             }
-
         }
         else if(choice==2)
         {
@@ -405,7 +407,6 @@ public class timerCont : MonoBehaviour
                 Score += mult * 100;
                 ScoreText.text = Score.ToString();
                 multCount++;
-
             }
             else
             {

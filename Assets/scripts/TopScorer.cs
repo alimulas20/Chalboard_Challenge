@@ -16,17 +16,16 @@ public class TopScorer : MonoBehaviour
     {
         Score.text = timerCont.Score.ToString();
         if (PlayerPrefs.GetString("6") != "1") {
-            PlayerPrefs.SetString("1", "21800,23/07/2022");
-            PlayerPrefs.SetString("2", "21600,21/07/2022");
-            PlayerPrefs.SetString("3", "21400,22/07/2022");
-            PlayerPrefs.SetString("4", "20600,20/07/2022");
-            PlayerPrefs.SetString("5", "20400,25/07/2022");
+            PlayerPrefs.SetString("1", "11800,23/07/2022");
+            PlayerPrefs.SetString("2", "11600,21/07/2022");
+            PlayerPrefs.SetString("3", "11400,22/07/2022");
+            PlayerPrefs.SetString("4", "10600,20/07/2022");
+            PlayerPrefs.SetString("5", "10400,25/07/2022");
             PlayerPrefs.SetString("6", "1");
         }
-        
-        string[] SystemDate = System.DateTime.Now.ToString().Split(' ');
-        string date = SystemDate[0].Replace('.', '/');
-   
+        System.DateTime theTime = System.DateTime.Now;
+        string date =theTime.ToString("dd-MM-yyyy").Replace('-','/');
+
         string[] pointscore;
         bool shift = false;
         for(int i = 0; i < 5; i++)
@@ -37,13 +36,15 @@ public class TopScorer : MonoBehaviour
                 shift = true;
                 Points[i].text = timerCont.Score.ToString();
                 Dates[i].text = date;
-                
                 LPIText.text = (1290/(i+1) + 1500).ToString();
             }
-            if (shift&&i<5)
+            if (shift)
             {
-                Points[i+1].text = pointscore[0];
-                Dates[i+1].text = pointscore[1];
+                if (i < 4)
+                {
+                    Points[i + 1].text = pointscore[0];
+                    Dates[i + 1].text = pointscore[1];                 
+                }
             }
             else
             {
@@ -55,7 +56,11 @@ public class TopScorer : MonoBehaviour
         if (!shift)
             LPIText.text = "1500";
         shift=false;
-
+        for(int i = 1; i < 6; i++)
+        {
+            PlayerPrefs.SetString((i).ToString(), Points[i-1].text + "," + Dates[i-1].text);
+        }
+   
 
         
     }
@@ -63,7 +68,11 @@ public class TopScorer : MonoBehaviour
     public void next()
     {
 
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex-2);
+        SceneManager.LoadScene(1);
+    }
+    public void exit()
+    {
+        Application.Quit();
     }
 
 }
